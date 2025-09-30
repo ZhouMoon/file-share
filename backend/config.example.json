@@ -1,0 +1,10 @@
+{
+  "port": 5421,
+  "uploadPath": "~/Downloads",
+  "authEnable": false,
+  "password": "password",
+  "tusEnable": false,
+  "chunkSize": 20,
+  "autoStart": false,
+  "comment": "这是配置文件示例，实际配置存储在 ~/.file-share-backend/storage.json"
+}
