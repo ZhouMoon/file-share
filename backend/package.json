@@ -10,10 +10,18 @@
     "quick-start": "node start.js",
     "run": "node run.js",
     "run-bg": "node run.js --background",
+    "run-with-build": "node run.js",
+    "run-bg-with-build": "node run.js --background",
+    "run-no-build": "node run.js --skip-build",
+    "run-bg-no-build": "node run.js --background --skip-build",
     "stop": "node stop.js",
     "test": "node test.js"
   },
-  "keywords": ["file-share", "nodejs", "express"],
+  "keywords": [
+    "file-share",
+    "nodejs",
+    "express"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
@@ -22,7 +30,7 @@
     "connect-history-api-fallback": "^2.0.0",
     "cookie-parser": "^1.4.6",
     "express": "^4.18.2",
-    "multer": "^1.4.3",
+    "multer": "^2.0.2",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

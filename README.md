@@ -29,9 +29,43 @@ step2：在utools插件商店搜索"文件共享"安装插件
 
 ## 使用指南
 
-step1：点击开启服务，并添加要共享的文件，支持文件、文件夹
+### 网页版本使用指南
 
-step2：将分享链接发送给你的朋友，下载文件
+step1：启动后端服务
+```bash
+# 进入backend目录
+cd backend
+
+# 安装依赖（首次使用）
+npm install
+
+# 带前端构建的启动（推荐首次使用）
+npm run run-with-build
+
+# 后台模式启动（带前端构建）
+npm run run-bg-with-build
+
+# 跳过构建的启动（后续快速启动）
+npm run run-no-build
+
+# 后台模式跳过构建启动
+npm run run-bg-no-build
+```
+
+step2：访问 http://localhost:5421（或显示的IP地址）
+
+step3：添加要共享的文件，支持文件、文件夹
+
+step4：将分享链接发送给你的朋友，下载文件
+
+### 停止服务
+```bash
+# 进入backend目录
+cd backend
+
+# 停止服务
+npm run stop
+```
 
 [utools 插件指南](./wiki/utools.md)
 
@@ -48,6 +82,7 @@ step2：将分享链接发送给你的朋友，下载文件
 |page_web| web页面      |
 |utools| 插件配置       |
 |electron| electron配置 |
+|backend| 后端服务代码     |
 
 ## 开始界面
 ![开始界面](wiki/asserts/images/startPage.png)

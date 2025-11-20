@@ -110,8 +110,8 @@ const initApp = () => {
     app.use(cookieParser());
     app.all("/api/*", authFilter);
     
-    // 静态文件服务 - 指向page_web目录
-    const pageWebPath = path.resolve(__dirname, '../../page_web');
+    // 静态文件服务 - 指向构建后的electron/dist/page_web目录
+    const pageWebPath = path.resolve(__dirname, '../../../electron/dist/page_web');
     app.use(express.static(pageWebPath, {index: 'index.html'}));
     
     // file list
@@ -265,8 +265,15 @@ const initApp = () => {
         });
     });
 
+    // 对于未匹配的路由，返回404而不是重定向，避免重定向循环
     app.use((req, res, next) => {
-        res.redirect('/');
+        // 检查请求是否以静态资源扩展名结尾，如果是则返回404
+        if (/\.(html|js|css|ico|png|jpg|jpeg|gif|svg)$/i.test(req.url)) {
+            res.status(404).send('Resource not found');
+        } else {
+            // 对于其他请求，保持历史模式的SPA行为
+            res.sendFile(path.join(path.resolve(__dirname, '../../../electron/dist/page_web'), 'index.html'));
+        }
     });
 
     return app;

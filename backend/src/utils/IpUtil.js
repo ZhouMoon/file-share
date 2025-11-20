@@ -40,7 +40,8 @@ let getNetInterfaceNames = function (ipFamily = "ipv4") {
             return getIpAddresses(name, ipFamily).length > 0;
         })
     let finalNames = ipNames.filter(function (name) {
-        return !/(loopback|vmware|internal|lo|vEthernet)/gi.test(name);
+        // 过滤掉loopback、vmware、internal、docker等接口
+        return !/(loopback|vmware|internal|lo|vEthernet|docker|br-|veth)/gi.test(name);
     });
     return finalNames.length === 0 ? (ipNames.length === 0 ? [] : ipNames) : finalNames;
 }
