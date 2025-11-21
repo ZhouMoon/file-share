@@ -84,6 +84,39 @@ npm run stop
 |electron| electron配置 |
 |backend| 后端服务代码     |
 
+## 部署指南
+
+我们提供了多种部署方式，详见 [backend/DEPLOY.md](./backend/DEPLOY.md) 文档。
+
+### 快速部署命令
+
+```bash
+# 进入backend目录
+cd backend
+
+# Docker部署 (推荐)
+npm run build-deploy-docker-prod
+
+# 传统服务器部署
+npm run build-deploy-prod
+```
+
+### Docker 快速启动
+
+```bash
+# 1. 构建Docker部署包
+npm run build-deploy-docker-prod
+
+# 2. 进入部署目录
+cd dist
+
+# 3. 启动服务
+docker-compose up -d
+
+# 4. 访问服务
+# http://服务器IP:5421
+```
+
 ## 开始界面
 ![开始界面](wiki/asserts/images/startPage.png)
 

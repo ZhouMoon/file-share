@@ -111,8 +111,12 @@ const initApp = () => {
     app.all("/api/*", authFilter);
     
     // 静态文件服务 - 指向构建后的electron/dist/page_web目录
-    const pageWebPath = path.resolve(__dirname, '../../../electron/dist/page_web');
-    app.use(express.static(pageWebPath, {index: 'index.html'}));
+    // 使用相对于当前工作目录的路径，确保在打包环境中正确找到前端文件
+    const pageWebPath = path.join(process.cwd(), 'electron', 'dist', 'page_web');
+    const resolvedPageWebPath = path.resolve(pageWebPath);
+    console.log('静态文件服务路径:', resolvedPageWebPath);
+    console.log('静态文件目录是否存在:', fs.existsSync(resolvedPageWebPath));
+    app.use(express.static(resolvedPageWebPath, {index: 'index.html'}));
     
     // file list
     app.get('/api/files', function (req, res) {
@@ -272,7 +276,10 @@ const initApp = () => {
             res.status(404).send('Resource not found');
         } else {
             // 对于其他请求，保持历史模式的SPA行为
-            res.sendFile(path.join(path.resolve(__dirname, '../../../electron/dist/page_web'), 'index.html'));
+            const indexHtmlPath = path.join(resolvedPageWebPath, 'index.html');
+            console.log('发送index.html路径:', indexHtmlPath);
+            console.log('index.html是否存在:', fs.existsSync(indexHtmlPath));
+            res.sendFile(indexHtmlPath);
         }
     });
 

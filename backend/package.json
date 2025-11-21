@@ -15,7 +15,11 @@
     "run-no-build": "node run.js --skip-build",
     "run-bg-no-build": "node run.js --background --skip-build",
     "stop": "node stop.js",
-    "test": "node test.js"
+    "test": "node test.js",
+    "build-deploy": "node build-deploy.js",
+    "build-deploy-prod": "node build-deploy.js --production",
+    "build-deploy-docker": "node build-deploy.js --docker",
+    "build-deploy-docker-prod": "node build-deploy.js --docker --production"
   },
   "keywords": [
     "file-share",
