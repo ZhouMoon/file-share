@@ -1,135 +1,221 @@
-## 简介
-**经历过500M以上的大文件传输吗？紧急要用，然后文件传输要N小时！**
+# 文件分享系统
 
-**经历过跨平台的文件传输的痛苦吗？你的mac电脑要传一个大文件给同事的windows电脑，过程一言难尽....**
+一个高效、安全的文件分享工具，支持网页端和桌面端，提供文件上传、下载、管理等功能。
 
-**file-share的诞生就是终结这个噩梦！**
+## 📋 功能特点
 
-## 优点
-**下载速度**：带宽直接打满，支持断点续传，结合[Free Download Manager](https://www.freedownloadmanager.org/zh/)之类的多线程下载器，下载速度完全取决于你的路由器和电脑有多强，下载速度就有多快！
+### 核心功能
+- 🌐 **局域网文件共享**：快速在局域网内分享文件
+- 📤 **文件上传**：支持单个或批量文件拖放上传
+- 📥 **文件下载**：直接从浏览器下载共享文件
+- 📋 **文件管理**：查看、删除已上传的文件
+- 📝 **文本消息分享**：支持纯文本内容分享
+- 📦 **目录压缩下载**：支持整个目录打包下载
+- 🎯 **实时事件推送**：使用SSE实现实时文件状态更新
 
-**跨平台**：支持Windows，MacOS，Linux等，Android，IOS等移动端可以通过网页上传或下载文件
+### 系统特性
+- 🚀 **高性能传输**：高效的文件传输机制，支持大文件
+- 🔒 **可选密码认证**：增强安全性
+- 📱 **响应式设计**：支持桌面和移动设备访问
+- 🔧 **灵活配置选项**：端口、上传路径等均可自定义
+- 💻 **后台运行**：支持服务在后台稳定运行
 
-## 下载地址
+## 📁 项目结构
 
-|                                             ![](./wiki/asserts/icon/utools.png)                                             |                               ![](./wiki/asserts/icon/mac-pass-sm.png)                                |                                 ![](./wiki/asserts/icon/mac-pass-sm.png)                                  |                               ![](./wiki/asserts/icon/windows-pass-sm.png)                                |                                ![](./wiki/asserts/icon/windows-pass-sm.png)                                |                                ![](./wiki/asserts/icon/linux-pass-sm.png)                                 | 
-|:---------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------:|
-| [Utools](https://www.u-tools.cn/plugins/detail/FileShare%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB(%E5%B1%80%E5%9F%9F%E7%BD%91)/) | [MacOS x64](https://github.com/cky-thinker/file-share/releases/latest/download/fileshare-mac-x64.dmg) | [MacOS arm64](https://github.com/cky-thinker/file-share/releases/latest/download/fileshare-mac-arm64.dmg) | [Win x64](https://github.com/cky-thinker/file-share/releases/latest/download/fileshare-setup-win-x64.exe) | [Win x86](https://github.com/cky-thinker/file-share/releases/latest/download/fileshare-setup-win-ia32.exe) | [Linux x64](https://github.com/cky-thinker/file-share/releases/latest/download/fileshare-linux-amd64.deb) |
-
-
-## 开源地址：
-https://gitee.com/yuDeJiJie/file-share
-
-https://github.com/cky-thinker/file-share
-
-## 安装指南
-step1：安装utools工具箱，地址： https://u.tools/
-
-step2：在utools插件商店搜索"文件共享"安装插件
-
-## 使用指南
-
-### 网页版本使用指南
-
-step1：启动后端服务
-```bash
-# 进入backend目录
-cd backend
-
-# 安装依赖（首次使用）
-npm install
-
-# 带前端构建的启动（推荐首次使用）
-npm run run-with-build
-
-# 后台模式启动（带前端构建）
-npm run run-bg-with-build
-
-# 跳过构建的启动（后续快速启动）
-npm run run-no-build
-
-# 后台模式跳过构建启动
-npm run run-bg-no-build
+```
+├── backend/              # 完整版后端服务
+├── file-share-web-only/  # 独立网页版本（精简版）
+│   ├── backend/          # 精简版后端
+│   └── page_web/         # 精简版前端
+└── page_web/             # 完整版前端
 ```
 
-step2：访问 http://localhost:5421（或显示的IP地址）
+## 🛠 技术栈
 
-step3：添加要共享的文件，支持文件、文件夹
+### 后端
+- Node.js
+- Express
+- Multer (文件上传)
+- SSE (Server-Sent Events)
 
-step4：将分享链接发送给你的朋友，下载文件
+### 前端
+- Vue 3
+- Element Plus
+- Axios
+- Vite
 
-### 停止服务
+## 📋 环境要求
+
+- **Node.js**: 14.0 或更高版本
+- **npm**: 6.0 或更高版本
+- **推荐**: Node.js 18+
+
+## 🚀 使用指南
+
+### 独立网页版本（推荐）
+
 ```bash
-# 进入backend目录
-cd backend
+# 进入目录
+cd file-share-web-only/backend
 
-# 停止服务
+# 安装依赖
+npm install
+
+# 前台启动服务
+npm start
+
+# 后台启动服务
+npm run start-bg
+
+# 停止后台服务
 npm run stop
 ```
 
-[utools 插件指南](./wiki/utools.md)
-
-## 使用常见问题
-1. windows分享链接失效问题解决方法
-
-通过"控制面板" -> "系统和安全" -> "Windows 防火墙" -> "高级设置" -> "入站规则" ，在其中查找utools.exe，将所有相关的操作选项设为“允许”，这个操作用在“分享链接失效”的电脑上
-
-## 开发说明
-
-| 目录  | 描述         |
-|-----|------------|
-|page_app| 应用页面       |
-|page_web| web页面      |
-|utools| 插件配置       |
-|electron| electron配置 |
-|backend| 后端服务代码     |
-
-## 部署指南
-
-我们提供了多种部署方式，详见 [backend/DEPLOY.md](./backend/DEPLOY.md) 文档。
-
-### 快速部署命令
+### 完整版项目
 
 ```bash
-# 进入backend目录
+# 进入目录
 cd backend
 
-# Docker部署 (推荐)
-npm run build-deploy-docker-prod
+# 安装依赖
+npm install
+
+# 前台启动服务
+npm start
+
+# 后台启动服务
+npm run run-bg
+
+# 后台启动（跳过前端构建）
+npm run run-bg-no-build
+
+# 停止后台服务
+npm run stop
+```
+
+## 📦 打包命令
+
+### 独立网页版本打包
+
+```bash
+# 进入目录
+cd file-share-web-only/backend
+
+# 构建部署包
+npm run build-deploy-prod
+
+# 打包后启动服务
+cd dist/backend
+node run.js --start
+# 或后台运行
+node run.js --start --background
+```
+
+### 完整版项目打包
+
+```bash
+# 进入目录
+cd backend
 
 # 传统服务器部署
 npm run build-deploy-prod
+# 部署包位于 dist/file-share-package.tar.gz
 ```
 
-### Docker 快速启动
+## ⚙️ 配置说明
+
+### 配置文件位置
+- **Linux/Mac**: `~/.file-share-backend/storage.json`
+- **Windows**: `%USERPROFILE%\.file-share-backend\storage.json`
+
+### 配置示例
+```json
+{
+  "port": 5421,
+  "uploadPath": "~/Downloads",
+  "authEnable": false,
+  "password": "",
+  "autoStart": true
+}
+```
+
+### 命令行参数
+- `--start`: 自动启动服务器
+- `--port <端口号>`: 设置服务器端口 (默认: 5421)
+- `--upload-path <路径>`: 设置文件上传路径
+- `--auth --password <密码>`: 启用认证并设置密码
+- `--background`, `-b`: 后台运行模式
+
+## 🔧 开发说明
+
+### 前端开发
 
 ```bash
-# 1. 构建Docker部署包
-npm run build-deploy-docker-prod
+# 完整版前端
+cd page_web
+npm install
+npm run dev
 
-# 2. 进入部署目录
-cd dist
-
-# 3. 启动服务
-docker-compose up -d
-
-# 4. 访问服务
-# http://服务器IP:5421
+# 精简版前端
+cd file-share-web-only/page_web
+npm install
+npm run dev
 ```
 
-## 开始界面
-![开始界面](wiki/asserts/images/startPage.png)
+### 后端开发
 
-## 主界面
-![主界面](wiki/asserts/images/mainPage.png)
+```bash
+# 完整版后端
+cd backend
+npm install
+npm run dev
 
-## 下载界面
-![下载界面](wiki/asserts/images/webPage.png)
+# 精简版后端
+cd file-share-web-only/backend
+npm install
+npm run dev
+```
 
-## 版本历史
+## 🌐 部署指南
 
-[版本历史](wiki/releases.md)
+### 传统服务器部署
 
-## Star History
+1. **构建部署包**
+```bash
+cd backend  # 或 cd file-share-web-only/backend
+npm run build-deploy-prod
+```
 
-[![Star History Chart](https://api.star-history.com/svg?repos=cky-thinker/file-share&type=Date)](https://www.star-history.com/#cky-thinker/file-share&Date)
+2. **服务器配置**
+```bash
+# 安装Node.js
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# 部署应用
+sudo mkdir -p /opt/file-share
+sudo chown $USER:$USER /opt/file-share
+tar -xzf file-share-package.tar.gz -C /opt/file-share --strip-components=1
+cd /opt/file-share
+npm ci --only=production
+
+# 创建上传目录
+mkdir -p uploads
+
+# 启动服务
+# 前台: npm start
+# 后台: nohup npm start > /dev/null 2>&1 &
+# 使用PM2: pm2 start ecosystem.config.js
+```
+
+## 🛡️ 安全建议
+
+1. 启用身份验证
+2. 使用HTTPS (配置SSL证书)
+3. 定期备份数据
+4. 限制上传文件类型和大小
+5. 定期更新依赖包
+
+## 📄 许可证
+
+MIT License
