@@ -38,3 +38,16 @@ export function getTusConfig() {
     method: 'get',
   })
 }
+
+/**
+ * 删除文件
+ * @param {Object} data - 包含filename的对象
+ * @returns { import('axios').AxiosPromise }
+ */
+export function deleteFile(data) {
+  return request({
+    url: '/deleteFile',
+    method: 'delete',
+    data: data
+  })
+}

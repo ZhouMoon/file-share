@@ -110,18 +110,26 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column width="70">
+            <el-table-column width="140">
               <template #default="scope">
                 <el-button v-if="['file', 'directory'].includes(scope.row.type)"
-                           @click="handleDownload(scope.row, $event)" plain>
+                           @click="handleDownload(scope.row, $event)" plain type="primary" size="small" style="margin-right: 5px;">
                   <el-icon size="16">
                     <Download/>
                   </el-icon>
                 </el-button>
 
-                <el-button v-if="scope.row.type === 'text'" @click="handleDownload(scope.row, $event)" plain>
+                <el-button v-if="scope.row.type === 'text'" @click="handleDownload(scope.row, $event)" plain type="primary" size="small" style="margin-right: 5px;">
                   <el-icon size="16">
                     <DocumentCopy/>
+                  </el-icon>
+                </el-button>
+                
+                <!-- 删除按钮 -->
+                <el-button v-if="['file', 'directory', 'text'].includes(scope.row.type)"
+                           @click="handleDelete(scope.row, $event)" plain type="danger" size="small">
+                  <el-icon size="16">
+                    <Delete/>
                   </el-icon>
                 </el-button>
               </template>
@@ -189,18 +197,18 @@
 <script>
 import FileIcon from "@/components/FileIcon";
 import SvgIcon from "@/components/SvgIcon";
-import {getTusConfig, listFiles, uploadMsg} from "@/api/FileApi";
+import {getTusConfig, listFiles, uploadMsg, deleteFile} from "@/api/FileApi";
 import {login} from "@/api/UserApi";
 import {addAuthInvalidCallback, getToken, setToken} from "@/utils/auth";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {copyClipboard} from '@/utils/clipboard'
 import {isPicture} from "@/utils/fileUtil";
-import {DocumentCopy, Download, Search, UploadFilled, User} from '@element-plus/icons-vue'
+import {DocumentCopy, Download, Search, UploadFilled, User, Delete} from '@element-plus/icons-vue'
 
 export default {
   name: 'HomeView',
   components: {
-    FileIcon, SvgIcon, DocumentCopy, Download, UploadFilled, User, Search
+    FileIcon, SvgIcon, DocumentCopy, Download, UploadFilled, User, Search, Delete
   },
   data() {
     return {
@@ -383,6 +391,41 @@ export default {
       this.fileList = fileList.filter((f) => {
         return f.name !== file.name;
       })
+    },
+    
+    // 删除文件处理函数
+    handleDelete(row, event) {
+      event.stopPropagation(); // 阻止冒泡，避免触发文件点击事件
+      
+      // 确认对话框
+      ElMessageBox.confirm(
+        `确定要删除「${row.name}」吗？`,
+        '确认删除',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).then(() => {
+        // 调用删除API
+        deleteFile({filename: row.name})
+          .then(response => {
+            if (response.code === 200) {
+              ElMessage.success('删除成功');
+              // 刷新文件列表
+              this.showFiles();
+            } else {
+              ElMessage.error(response.message || '删除失败');
+            }
+          })
+          .catch(error => {
+            console.error('删除文件失败:', error);
+            ElMessage.error('删除失败，请重试');
+          });
+      }).catch(() => {
+        // 用户取消删除
+        ElMessage.info('已取消删除');
+      });
     },
     async loadTusConfig() {
       const res = await getTusConfig()

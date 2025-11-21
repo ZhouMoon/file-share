@@ -268,6 +268,46 @@ const initApp = () => {
             console.log("send fileDb.listChange event");
         });
     });
+    
+    // 删除文件
+    app.delete('/api/deleteFile', jsonParser, function (req, res) {
+        console.log('/api/deleteFile', req.body);
+        
+        let filename = req.body.filename;
+        if (!filename) {
+            res.json({code: 400, message: '文件名不能为空'});
+            return;
+        }
+        
+        try {
+            // 获取文件信息
+            let file = FileDb.getFile(filename);
+            if (!file) {
+                res.json({code: 404, message: '文件不存在'});
+                return;
+            }
+            
+            // 对于非文本文件，尝试删除实际文件
+            if (file.type === 'file' && file.path) {
+                try {
+                    if (fs.existsSync(file.path)) {
+                        fs.unlinkSync(file.path);
+                        console.log('实际文件已删除:', file.path);
+                    }
+                } catch (error) {
+                    console.error('删除实际文件失败:', error);
+                    // 即使实际文件删除失败，也继续删除数据库记录
+                }
+            }
+            
+            // 从数据库中删除文件记录
+            FileDb.removeFile(file);
+            res.json({code: 200, message: '删除成功'});
+        } catch (error) {
+            console.error('删除文件失败:', error);
+            res.json({code: 500, message: '删除失败: ' + error.message});
+        }
+    });
 
     // 对于未匹配的路由，返回404而不是重定向，避免重定向循环
     app.use((req, res, next) => {
