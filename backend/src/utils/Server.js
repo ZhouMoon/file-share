@@ -237,7 +237,8 @@ const initApp = () => {
             cb(null, Setting.getUploadPath());
         },
         filename: function (req, file, cb) {
-            cb(null, file.originalname);
+            // 确保中文文件名正确处理
+            cb(null, Buffer.from(file.originalname, 'latin1').toString('utf8'));
         }
     });
 
@@ -245,7 +246,9 @@ const initApp = () => {
     app.post('/api/addFile', upload.single('file'), function (req, res, next) {
         let file = req.file;
         let sourceip = getClientIp(req);
-        FileDb.addFile({name: file.originalname, path: file.path, username: sourceip});
+        // 确保传递给数据库的文件名是正确编码的
+        let originalName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+        FileDb.addFile({name: originalName, path: file.path, username: sourceip});
         res.json({code: 200, message: '添加成功'});
     });
 
