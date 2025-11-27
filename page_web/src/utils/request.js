@@ -84,6 +84,10 @@ service.interceptors.response.use(res => {
     } else if (message.includes("Request failed with status code")) {
       if (error.response.status === 404) {
         message = "文件不存在";
+      } else if (error.response.status === 401) {
+        message = "登录状态无效，请重新登录";
+        // 清除token并触发登录对话框
+        logout();
       } else {
         message = "系统接口" + message.substr(message.length - 3) + "异常";
       }
@@ -93,7 +97,7 @@ service.interceptors.response.use(res => {
       type: 'error',
       duration: 5 * 1000
     })
-    return Promise.reject(error)
+    return Promise.reject(message)
   }
 )
 

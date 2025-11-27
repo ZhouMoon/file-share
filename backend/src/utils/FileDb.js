@@ -5,24 +5,9 @@ const os = require('os');
 const EventDispatcher = require('./EventDispatcher');
 const AppDatabase = require('./Database');
 
-function getMachineId() {
-    const networkInterfaces = require('os').networkInterfaces();
-    let macAddress = '';
-    for (const interfaceName in networkInterfaces) {
-        const networkInterface = networkInterfaces[interfaceName];
-        for (const network of networkInterface) {
-            if (network.mac && network.mac !== '00:00:00:00:00:00') {
-                macAddress = network.mac;
-                break;
-            }
-        }
-        if (macAddress) break;
-    }
-    return macAddress || os.hostname();
-}
-
+// 使用固定的键名，不再带有MAC地址
 function getFileDBKey() {
-    return "FileDb:" + getMachineId();
+    return "FileDb";
 }
 
 const addFileToDb = (fileName, fileInfo) => {
@@ -38,8 +23,34 @@ const removeFileToDb = (fileName) => {
 };
 
 const getFileDb = () => {
-    let fileDbStr = AppDatabase.getStorageItem(getFileDBKey(), "{}");
-    return JSON.parse(fileDbStr);
+    // 优先使用不带MAC地址的键，保持向后兼容性
+    let fileDbStr = AppDatabase.getStorageItem(getFileDBKey(), null);
+    
+    // 如果不带MAC地址的键不存在，尝试从带MAC地址的键迁移数据
+    if (fileDbStr === null) {
+        // 生成带MAC地址的键名（用于迁移旧数据）
+        const networkInterfaces = require('os').networkInterfaces();
+        let macAddress = '';
+        for (const interfaceName in networkInterfaces) {
+            const networkInterface = networkInterfaces[interfaceName];
+            for (const network of networkInterface) {
+                if (network.mac && network.mac !== '00:00:00:00:00:00') {
+                    macAddress = network.mac;
+                    break;
+                }
+            }
+            if (macAddress) break;
+        }
+        const oldKey = "FileDb:" + (macAddress || os.hostname());
+        fileDbStr = AppDatabase.getStorageItem(oldKey, "{}");
+        
+        // 如果旧键有数据，迁移到新键
+        if (fileDbStr !== "{}") {
+            AppDatabase.setStorageItem(getFileDBKey(), fileDbStr);
+        }
+    }
+    
+    return JSON.parse(fileDbStr || "{}");
 };
 
 const addFile = (file) => {

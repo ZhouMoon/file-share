@@ -181,7 +181,7 @@
         v-model="loginFormVisible">
         <el-form ref="loginForm" :model="loginForm" label-width="80px">
           <el-form-item label="密码">
-            <el-input v-model="loginForm.password"></el-input>
+            <el-input v-model="loginForm.password" type="password" @keyup.enter.native="submitLoginForm"></el-input>
           </el-form-item>
         </el-form>
         <template #footer>
@@ -360,6 +360,10 @@ export default {
           this.path = [...this.path]
           this.updateRouter();
         }
+        // 处理401错误，触发登录对话框
+        if (error === '登录状态无效，请重新登录' || (error.response && error.response.status === 401)) {
+          this.loginFormVisible = true;
+        }
         console.log("请求失败", error)
       }
     },
@@ -387,7 +391,7 @@ export default {
     },
     uploadError(err, file, fileList) {
       console.log('---uploadError---', err, file, fileList)
-      ElMessage({message: '上传失败', type: 'success'})
+      ElMessage({message: '上传失败', type: 'error'})
       this.fileList = fileList.filter((f) => {
         return f.name !== file.name;
       })
@@ -428,8 +432,18 @@ export default {
       });
     },
     async loadTusConfig() {
-      const res = await getTusConfig()
-      this.tusConfig = res.data
+      try {
+        const res = await getTusConfig()
+        this.tusConfig = res.data
+      } catch (error) {
+        // 处理401错误，触发登录对话框
+        if (error === '登录状态无效，请重新登录' || (error.response && error.response.status === 401)) {
+          this.loginFormVisible = true;
+          // 取消上传
+          return false;
+        }
+        console.log("获取tus配置失败", error)
+      }
     },
     downloadFile(filename) {
       let a = document.createElement('a');

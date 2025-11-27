@@ -48,7 +48,20 @@ function getMachineId() {
 }
 
 function getUploadPath() {
-    return AppDatabase.getStorageItem(uploadPathKey + ":" + getMachineId(), getDefaultUploadPath);
+    // 优先使用不带MAC地址的键，保持向后兼容性
+    const value = AppDatabase.getStorageItem(uploadPathKey, null);
+    if (value !== null) {
+        return value;
+    }
+    // 如果不带MAC地址的键不存在，则使用带有MAC地址的键
+    const macValue = AppDatabase.getStorageItem(uploadPathKey + ":" + getMachineId(), null);
+    if (macValue !== null) {
+        // 将带有MAC地址的键的值迁移到不带MAC地址的键
+        AppDatabase.setStorageItem(uploadPathKey, macValue);
+        return macValue;
+    }
+    // 如果都不存在，则使用默认值
+    return AppDatabase.getStorageItem(uploadPathKey, getDefaultUploadPath);
 }
 
 /**
@@ -72,7 +85,8 @@ function updateUploadPath(path) {
         if (!fs.lstatSync(path).isDirectory()) {
             return reject({ success: false, message: '上传路径必须为文件夹' });
         }
-        AppDatabase.setStorageItem(uploadPathKey + ":" + getMachineId(), path);
+        // 使用不带MAC地址的键来存储值
+        AppDatabase.setStorageItem(uploadPathKey, path);
         resolve({ success: true, message: '修改成功' });
     });
 }
