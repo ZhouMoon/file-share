@@ -1,6 +1,6 @@
 # 文件分享系统
 
-一个高效、安全的文件分享工具，支持网页端和桌面端，提供文件上传、下载、管理等功能。
+一个高效、安全的网页版文件分享工具，提供文件上传、下载、管理等功能。
 
 ## 📋 功能特点
 
@@ -23,11 +23,8 @@
 ## 📁 项目结构
 
 ```
-├── backend/              # 完整版后端服务
-├── file-share-web-only/  # 独立网页版本（精简版）
-│   ├── backend/          # 精简版后端
-│   └── page_web/         # 精简版前端
-└── page_web/             # 完整版前端
+├── backend/     # 后端服务
+└── page_web/    # 前端页面
 ```
 
 ## 🛠 技术栈
@@ -42,7 +39,6 @@
 - Vue 3
 - Element Plus
 - Axios
-- Vite
 
 ## 📋 环境要求
 
@@ -52,54 +48,30 @@
 
 ## 🚀 使用指南
 
-### 独立网页版本（推荐）
+### 安装与启动
 
 ```bash
-# 进入目录
-cd file-share-web-only/backend
-
-# 安装依赖
-npm install
-
-# 前台启动服务
-npm start
-
-# 后台启动服务
-npm run start-bg
-
-# 停止后台服务
-npm run stop
-```
-
-### 完整版项目
-
-```bash
-# 进入目录
+# 进入后端目录
 cd backend
 
 # 安装依赖
 npm install
 
 # 前台启动服务
-npm start
+node src/index.js --start
 
 # 后台启动服务
-npm run run-bg
+node run.js --start --background
 
-# 后台启动（跳过前端构建）
-npm run run-bg-no-build
-
-# 停止后台服务
-npm run stop
+# 停止服务
+node stop.js
 ```
 
 ## 📦 打包命令
 
-### 独立网页版本打包
-
 ```bash
-# 进入目录
-cd file-share-web-only/backend
+# 进入后端目录
+cd backend
 
 # 构建部署包
 npm run build-deploy-prod
@@ -107,19 +79,6 @@ npm run build-deploy-prod
 # 打包后启动服务
 cd dist/backend
 node run.js --start
-# 或后台运行
-node run.js --start --background
-```
-
-### 完整版项目打包
-
-```bash
-# 进入目录
-cd backend
-
-# 传统服务器部署
-npm run build-deploy-prod
-# 部署包位于 dist/file-share-package.tar.gz
 ```
 
 ## ⚙️ 配置说明
@@ -145,68 +104,6 @@ npm run build-deploy-prod
 - `--upload-path <路径>`: 设置文件上传路径
 - `--auth --password <密码>`: 启用认证并设置密码
 - `--background`, `-b`: 后台运行模式
-
-## 🔧 开发说明
-
-### 前端开发
-
-```bash
-# 完整版前端
-cd page_web
-npm install
-npm run dev
-
-# 精简版前端
-cd file-share-web-only/page_web
-npm install
-npm run dev
-```
-
-### 后端开发
-
-```bash
-# 完整版后端
-cd backend
-npm install
-npm run dev
-
-# 精简版后端
-cd file-share-web-only/backend
-npm install
-npm run dev
-```
-
-## 🌐 部署指南
-
-### 传统服务器部署
-
-1. **构建部署包**
-```bash
-cd backend  # 或 cd file-share-web-only/backend
-npm run build-deploy-prod
-```
-
-2. **服务器配置**
-```bash
-# 安装Node.js
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt-get install -y nodejs
-
-# 部署应用
-sudo mkdir -p /opt/file-share
-sudo chown $USER:$USER /opt/file-share
-tar -xzf file-share-package.tar.gz -C /opt/file-share --strip-components=1
-cd /opt/file-share
-npm ci --only=production
-
-# 创建上传目录
-mkdir -p uploads
-
-# 启动服务
-# 前台: npm start
-# 后台: nohup npm start > /dev/null 2>&1 &
-# 使用PM2: pm2 start ecosystem.config.js
-```
 
 ## 🛡️ 安全建议
 
