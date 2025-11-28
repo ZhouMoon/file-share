@@ -179,9 +179,9 @@
         title="身份校验"
         class="dialog"
         v-model="loginFormVisible">
-        <el-form ref="loginForm" :model="loginForm" label-width="80px">
+        <el-form ref="loginForm" :model="loginForm" label-width="80px" @submit.prevent="submitLoginForm">
           <el-form-item label="密码">
-            <el-input v-model="loginForm.password" type="password" @keyup.enter.native="submitLoginForm"></el-input>
+            <el-input v-model="loginForm.password" type="password" @keyup.enter="submitLoginForm" @keydown.enter.prevent="submitLoginForm"></el-input>
           </el-form-item>
         </el-form>
         <template #footer>
